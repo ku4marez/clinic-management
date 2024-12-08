@@ -1,0 +1,45 @@
+# Root-level files and directories
+*.log
+.DS_Store
+
+# Ignore the IntelliJ project files
+.idea/
+*.iml
+
+# Maven-specific ignores (server module)
+clinic-management-server/HELP.md
+clinic-management-server/target/
+clinic-management-server/.apt_generated/
+clinic-management-server/.classpath/
+clinic-management-server/.factorypath/
+clinic-management-server/.project/
+clinic-management-server/.settings/
+clinic-management-server/.springBeans/
+clinic-management-server/.sts4-cache/
+clinic-management-server/build/
+!clinic-management-server/.mvn/wrapper/maven-wrapper.jar
+!clinic-management-server/src/main/**/target/
+!clinic-management-server/src/test/**/target/
+
+# Node.js-specific ignores (client module)
+clinic-management-client/node_modules/
+clinic-management-client/build/
+clinic-management-client/dist/
+
+# STS (Spring Tool Suite) and Eclipse
+*.classpath
+*.factorypath
+*.project
+*.settings/
+.apt_generated/
+.sts4-cache/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Visual Studio Code
+.vscode/
