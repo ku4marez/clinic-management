@@ -25,16 +25,19 @@ public class MongoConfiguration {
     @Value("${spring.data.mongodb.password}")
     private String password;
 
+    @Value("${spring.data.mongodb.authentication-database}")
+    private String authDatabase;
+
     @Bean
     public MongoClient mongoClient() {
-        // Connection string with credentials
         String connectionString = String.format(
-                "mongodb://%s:%s@%s:%d/%s",
+                "mongodb://%s:%s@%s:%d/%s?authSource=%s",
                 username,
                 password,
                 mongoHost,
                 mongoPort,
-                mongoDatabase
+                mongoDatabase,
+                authDatabase
         );
         return MongoClients.create(connectionString);
     }
