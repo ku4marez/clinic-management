@@ -1,6 +1,6 @@
 package com.github.ku4marez.clinicmanagement.exception;
 
-import com.github.ku4marez.clinicmanagement.dto.ErrorResponse;
+import com.github.ku4marez.clinicmanagement.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

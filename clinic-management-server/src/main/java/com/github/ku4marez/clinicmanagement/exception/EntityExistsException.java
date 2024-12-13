@@ -3,13 +3,13 @@ package com.github.ku4marez.clinicmanagement.exception;
 import lombok.Getter;
 
 @Getter
-public class EntityNotFoundException extends RuntimeException {
+public class EntityExistsException extends RuntimeException {
 
     private final String entityName;
     private final String identifier;
 
-    public EntityNotFoundException(String entityName, String identifier) {
-        super(String.format("%s not found with identifier: %s", entityName, identifier));
+    public EntityExistsException(String entityName, String identifier) {
+        super(String.format("%s already exists with identifier: %s", entityName, identifier));
         this.entityName = entityName;
         this.identifier = identifier;
     }
