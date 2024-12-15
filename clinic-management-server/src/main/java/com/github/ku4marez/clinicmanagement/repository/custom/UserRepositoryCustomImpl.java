@@ -1,7 +1,6 @@
-package com.github.ku4marez.clinicmanagement.repository.impl;
+package com.github.ku4marez.clinicmanagement.repository.custom;
 
 import com.github.ku4marez.clinicmanagement.entity.UserEntity;
-import com.github.ku4marez.clinicmanagement.repository.custom.UserRepositoryCustom;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;

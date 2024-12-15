@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class MongoDbConnectionTest {
+class MongoDbConnectionTest {
 
     @Autowired
     private MongoClient mongoClient;
@@ -18,12 +18,12 @@ public class MongoDbConnectionTest {
     private MongoTemplate mongoTemplate;
 
     @Test
-    public void testMongoClientConnection() {
+    void testMongoClientConnection() {
         assertThat(mongoClient).isNotNull();
     }
 
     @Test
-    public void testMongoTemplateConnection() {
+    void testMongoTemplateConnection() {
         assertThat(mongoTemplate).isNotNull();
 
         String databaseName = mongoTemplate.getDb().getName();

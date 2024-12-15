@@ -1,8 +1,8 @@
 package com.github.ku4marez.clinicmanagement.service;
 
 import com.github.ku4marez.clinicmanagement.dto.UserDTO;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
     UserDTO createUser(UserDTO userDTO);
@@ -11,7 +11,7 @@ public interface UserService {
 
     UserDTO getUserById(String id);
 
-    List<UserDTO> getAllUsers();
+    Page<UserDTO> getAllUsers(Pageable pageable);
 
     UserDTO updateUser(String id, UserDTO userDTO);
 

@@ -2,13 +2,15 @@ package com.github.ku4marez.clinicmanagement.controller;
 
 import com.github.ku4marez.clinicmanagement.dto.UserDTO;
 import com.github.ku4marez.clinicmanagement.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/users")
+@SecurityRequirement(name = "bearer-key")
 public class UserController {
 
     private final UserService userService;
@@ -27,14 +29,14 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    @GetMapping()
-    public ResponseEntity<UserDTO> getUserByEmail( @RequestParam String email) {
+    @GetMapping("/search")
+    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email) {
         return ResponseEntity.ok(userService.findUserByEmailCaseSensitive(email));
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<Page<UserDTO>> getAllUsers(Pageable pageable) {
+        return ResponseEntity.ok(userService.getAllUsers(pageable));
     }
 
     @PutMapping("/{id}")

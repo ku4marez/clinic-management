@@ -5,11 +5,11 @@ import com.github.ku4marez.clinicmanagement.entity.UserEntity;
 import com.github.ku4marez.clinicmanagement.exception.UserNotFoundException;
 import com.github.ku4marez.clinicmanagement.repository.UserRepository;
 import com.github.ku4marez.clinicmanagement.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -42,11 +42,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
+    public Page<UserDTO> getAllUsers(Pageable pageable) {
+        Page<UserEntity> usersPage = userRepository.findAll(pageable);
+        return usersPage.map(this::mapToDTO);
     }
 
     @Override

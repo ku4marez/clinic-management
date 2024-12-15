@@ -4,15 +4,19 @@ import com.github.ku4marez.clinicmanagement.entity.UserEntity;
 import com.github.ku4marez.clinicmanagement.entity.enums.Role;
 import jakarta.annotation.PostConstruct;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseInitializer {
 
     private final MongoTemplate mongoTemplate;
+    private final PasswordEncoder passwordEncoder;
 
-    public DatabaseInitializer(MongoTemplate mongoTemplate) {
+    public DatabaseInitializer(MongoTemplate mongoTemplate,
+                               PasswordEncoder passwordEncoder) {
         this.mongoTemplate = mongoTemplate;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostConstruct
@@ -70,7 +74,7 @@ public class DatabaseInitializer {
             adminUser.setFirstName("Admin");
             adminUser.setLastName("User");
             adminUser.setEmail("admin@example.com");
-            adminUser.setPassword("securePassword");
+            adminUser.setPassword(passwordEncoder.encode("securePassword"));
             adminUser.setRole(Role.ADMIN);
 
             mongoTemplate.save(adminUser);
