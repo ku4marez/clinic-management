@@ -1,5 +1,7 @@
 package com.github.ku4marez.clinicmanagement.configuration;
 
+import com.github.ku4marez.clinicmanagement.entity.DoctorEntity;
+import com.github.ku4marez.clinicmanagement.entity.PatientEntity;
 import com.github.ku4marez.clinicmanagement.entity.UserEntity;
 import com.github.ku4marez.clinicmanagement.entity.enums.Role;
 import jakarta.annotation.PostConstruct;
@@ -7,14 +9,15 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Component
 public class DatabaseInitializer {
 
     private final MongoTemplate mongoTemplate;
     private final PasswordEncoder passwordEncoder;
 
-    public DatabaseInitializer(MongoTemplate mongoTemplate,
-                               PasswordEncoder passwordEncoder) {
+    public DatabaseInitializer(MongoTemplate mongoTemplate, PasswordEncoder passwordEncoder) {
         this.mongoTemplate = mongoTemplate;
         this.passwordEncoder = passwordEncoder;
     }
@@ -22,19 +25,22 @@ public class DatabaseInitializer {
     @PostConstruct
     public void init() {
         initializeUsersCollection();
+        initializeDoctorsCollection();
+        initializePatientsCollection();
     }
 
+    // =================== USERS COLLECTION ===================
     private void initializeUsersCollection() {
         String collectionName = "users";
 
         if (!mongoTemplate.collectionExists(collectionName)) {
             mongoTemplate.createCollection(collectionName);
         }
-        applyValidationRules(collectionName);
+        applyUserValidationRules(collectionName);
         seedDefaultUsers();
     }
 
-    private void applyValidationRules(String collectionName) {
+    private void applyUserValidationRules(String collectionName) {
         String validationSchema = """
         {
             "$jsonSchema": {
@@ -55,7 +61,7 @@ public class DatabaseInitializer {
                 }
             }
         }
-    """;
+        """;
 
         mongoTemplate.executeCommand("""
         {
@@ -64,8 +70,7 @@ public class DatabaseInitializer {
             "validationLevel": "strict",
             "validationAction": "error"
         }
-        """.formatted(collectionName, validationSchema)
-        );
+        """.formatted(collectionName, validationSchema));
     }
 
     private void seedDefaultUsers() {
@@ -78,6 +83,120 @@ public class DatabaseInitializer {
             adminUser.setRole(Role.ADMIN);
 
             mongoTemplate.save(adminUser);
+        }
+    }
+
+    // =================== DOCTORS COLLECTION ===================
+    private void initializeDoctorsCollection() {
+        String collectionName = "doctors";
+
+        if (!mongoTemplate.collectionExists(collectionName)) {
+            mongoTemplate.createCollection(collectionName);
+        }
+        applyDoctorValidationRules(collectionName);
+        seedDefaultDoctors();
+    }
+
+    private void applyDoctorValidationRules(String collectionName) {
+        String validationSchema = """
+        {
+            "$jsonSchema": {
+                "bsonType": "object",
+                "required": ["firstName", "lastName", "email", "phoneNumber", "specialty", "licenseNumber"],
+                "properties": {
+                    "firstName": { "bsonType": "string" },
+                    "lastName": { "bsonType": "string" },
+                    "email": {
+                        "bsonType": "string",
+                        "pattern": "^.+@.+\\\\..+$"
+                    },
+                    "phoneNumber": { "bsonType": "string" },
+                    "specialty": { "bsonType": "string" },
+                    "licenseNumber": { "bsonType": "string" }
+                }
+            }
+        }
+        """;
+
+        mongoTemplate.executeCommand("""
+        {
+            "collMod": "%s",
+            "validator": %s,
+            "validationLevel": "strict",
+            "validationAction": "error"
+        }
+        """.formatted(collectionName, validationSchema));
+    }
+
+    private void seedDefaultDoctors() {
+        if (mongoTemplate.findAll(DoctorEntity.class).isEmpty()) {
+            DoctorEntity doctor = new DoctorEntity();
+            doctor.setFirstName("John");
+            doctor.setLastName("Smith");
+            doctor.setEmail("john.smith@clinic.com");
+            doctor.setPhoneNumber("123-456-7890");
+            doctor.setSpecialty("Cardiology");
+            doctor.setLicenseNumber("DOC123456");
+
+            mongoTemplate.save(doctor);
+        }
+    }
+
+    // =================== PATIENTS COLLECTION ===================
+    private void initializePatientsCollection() {
+        String collectionName = "patients";
+
+        if (!mongoTemplate.collectionExists(collectionName)) {
+            mongoTemplate.createCollection(collectionName);
+        }
+        applyPatientValidationRules(collectionName);
+        seedDefaultPatients();
+    }
+
+    private void applyPatientValidationRules(String collectionName) {
+        String validationSchema = """
+        {
+            "$jsonSchema": {
+                "bsonType": "object",
+                "required": ["firstName", "lastName", "email", "dateOfBirth", "phoneNumber", "address", "medicalRecordNumber"],
+                "properties": {
+                    "firstName": { "bsonType": "string" },
+                    "lastName": { "bsonType": "string" },
+                    "email": {
+                        "bsonType": "string",
+                        "pattern": "^.+@.+\\\\..+$"
+                    },
+                    "dateOfBirth": { "bsonType": "date" },
+                    "phoneNumber": { "bsonType": "string" },
+                    "address": { "bsonType": "string" },
+                    "medicalRecordNumber": { "bsonType": "string" }
+                }
+            }
+        }
+        """;
+
+        mongoTemplate.executeCommand("""
+        {
+            "collMod": "%s",
+            "validator": %s,
+            "validationLevel": "strict",
+            "validationAction": "error"
+        }
+        """.formatted(collectionName, validationSchema));
+    }
+
+    private void seedDefaultPatients() {
+        if (mongoTemplate.findAll(PatientEntity.class).isEmpty()) {
+            PatientEntity patient = new PatientEntity();
+            patient.setFirstName("Jane");
+            patient.setLastName("Doe");
+            patient.setEmail("jane.doe@clinic.com");
+            patient.setDateOfBirth(LocalDate.of(1990, 1, 1));
+            patient.setPhoneNumber("987-654-3210");
+            patient.setAddress("123 Main St, Springfield");
+            patient.setMedicalRecordNumber("PAT123456");
+
+            mongoTemplate.save(patient);
         }
     }
 }
