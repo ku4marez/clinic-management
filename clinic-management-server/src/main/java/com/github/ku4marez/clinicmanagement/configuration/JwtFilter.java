@@ -1,6 +1,6 @@
 package com.github.ku4marez.clinicmanagement.configuration;
 
-import com.github.ku4marez.clinicmanagement.Util.JwtUtil;
+import com.github.ku4marez.clinicmanagement.util.JwtUtil;
 import com.github.ku4marez.clinicmanagement.service.impl.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

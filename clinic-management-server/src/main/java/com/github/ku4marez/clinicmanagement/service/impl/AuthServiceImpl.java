@@ -1,6 +1,6 @@
 package com.github.ku4marez.clinicmanagement.service.impl;
 
-import com.github.ku4marez.clinicmanagement.Util.JwtUtil;
+import com.github.ku4marez.clinicmanagement.util.JwtUtil;
 import com.github.ku4marez.clinicmanagement.entity.UserEntity;
 import com.github.ku4marez.clinicmanagement.exception.UserAlreadyExistsException;
 import com.github.ku4marez.clinicmanagement.repository.UserRepository;

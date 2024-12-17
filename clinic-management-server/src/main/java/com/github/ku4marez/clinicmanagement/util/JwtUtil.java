@@ -1,4 +1,4 @@
-package com.github.ku4marez.clinicmanagement.Util;
+package com.github.ku4marez.clinicmanagement.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
