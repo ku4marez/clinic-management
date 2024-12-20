@@ -6,20 +6,26 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.repository.query.MongoEntityInformation;
+import org.springframework.data.mongodb.repository.support.SimpleMongoRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
-@SuppressWarnings("unused")
-public class CustomSearchRepositoryImpl<T> implements CustomSearchRepository<T> {
+@NoRepositoryBean
+public class CustomSearchRepositoryImpl<T, ID> extends SimpleMongoRepository<T, ID>
+        implements CustomSearchRepository<T> {
 
     private final MongoTemplate mongoTemplate;
     private final Class<T> entityClass;
 
-    public CustomSearchRepositoryImpl(MongoTemplate mongoTemplate,
-                                      Class<T> entityClass) {
+    public CustomSearchRepositoryImpl(MongoEntityInformation<T, ID> entityInformation,
+                                      MongoTemplate mongoTemplate) {
+        super(entityInformation, mongoTemplate);
         this.mongoTemplate = mongoTemplate;
-        this.entityClass = entityClass;
+        this.entityClass = entityInformation.getJavaType();
     }
 
     @Override
@@ -39,3 +45,4 @@ public class CustomSearchRepositoryImpl<T> implements CustomSearchRepository<T> 
         return new PageImpl<>(results, pageable, total);
     }
 }
+

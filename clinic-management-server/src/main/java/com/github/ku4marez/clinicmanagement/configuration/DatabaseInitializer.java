@@ -1,5 +1,6 @@
 package com.github.ku4marez.clinicmanagement.configuration;
 
+import com.github.ku4marez.clinicmanagement.entity.AppointmentEntity;
 import com.github.ku4marez.clinicmanagement.entity.DoctorEntity;
 import com.github.ku4marez.clinicmanagement.entity.PatientEntity;
 import com.github.ku4marez.clinicmanagement.entity.UserEntity;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Component
 public class DatabaseInitializer {
@@ -27,6 +29,7 @@ public class DatabaseInitializer {
         initializeUsersCollection();
         initializeDoctorsCollection();
         initializePatientsCollection();
+        initializeAppointmentsCollection();
     }
 
     // =================== USERS COLLECTION ===================
@@ -131,6 +134,7 @@ public class DatabaseInitializer {
     private void seedDefaultDoctors() {
         if (mongoTemplate.findAll(DoctorEntity.class).isEmpty()) {
             DoctorEntity doctor = new DoctorEntity();
+            doctor.setId("64a67b12e45c9c2ff91f5a3d");
             doctor.setFirstName("John");
             doctor.setLastName("Smith");
             doctor.setEmail("john.smith@clinic.com");
@@ -188,6 +192,7 @@ public class DatabaseInitializer {
     private void seedDefaultPatients() {
         if (mongoTemplate.findAll(PatientEntity.class).isEmpty()) {
             PatientEntity patient = new PatientEntity();
+            patient.setId("64a67b12e45c9c2ff91f5a3e");
             patient.setFirstName("Jane");
             patient.setLastName("Doe");
             patient.setEmail("jane.doe@clinic.com");
@@ -197,6 +202,60 @@ public class DatabaseInitializer {
             patient.setMedicalRecordNumber("PAT123456");
 
             mongoTemplate.save(patient);
+        }
+    }
+
+    // =================== APPOINTMENTS COLLECTION ===================
+    private void initializeAppointmentsCollection() {
+        String collectionName = "appointments";
+
+        if (!mongoTemplate.collectionExists(collectionName)) {
+            mongoTemplate.createCollection(collectionName);
+        }
+        applyAppointmentValidationRules(collectionName);
+        seedDefaultAppointments();
+    }
+
+    private void applyAppointmentValidationRules(String collectionName) {
+        String validationSchema = """
+        {
+            "$jsonSchema": {
+                "bsonType": "object",
+                "required": ["doctorId", "patientId", "dateTime", "status", "reason"],
+                "properties": {
+                    "doctorId": { "bsonType": "string" },
+                    "patientId": { "bsonType": "string" },
+                    "dateTime": { "bsonType": "date" },
+                    "status": {
+                        "bsonType": "string",
+                        "enum": ["Scheduled", "Completed", "Canceled"]
+                    },
+                    "reason": { "bsonType": "string" }
+                }
+            }
+        }
+        """;
+
+        mongoTemplate.executeCommand("""
+        {
+            "collMod": "%s",
+            "validator": %s,
+            "validationLevel": "strict",
+            "validationAction": "error"
+        }
+        """.formatted(collectionName, validationSchema));
+    }
+
+    private void seedDefaultAppointments() {
+        if (mongoTemplate.findAll(AppointmentEntity.class).isEmpty()) {
+            AppointmentEntity appointment = new AppointmentEntity();
+            appointment.setDoctorId("64a67b12e45c9c2ff91f5a3d");
+            appointment.setPatientId("64a67b12e45c9c2ff91f5a3e");
+            appointment.setDateTime(LocalDateTime.now().plusDays(1));
+            appointment.setStatus("Scheduled");
+            appointment.setReason("Routine Checkup");
+
+            mongoTemplate.save(appointment);
         }
     }
 }
