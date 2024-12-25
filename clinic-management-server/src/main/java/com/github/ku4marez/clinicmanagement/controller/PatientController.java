@@ -2,6 +2,7 @@ package com.github.ku4marez.clinicmanagement.controller;
 
 import com.github.ku4marez.clinicmanagement.dto.PatientDTO;
 import com.github.ku4marez.clinicmanagement.service.PatientService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/patients")
+@SecurityRequirement(name = "bearer-key")
 public class PatientController {
 
     private final PatientService patientService;

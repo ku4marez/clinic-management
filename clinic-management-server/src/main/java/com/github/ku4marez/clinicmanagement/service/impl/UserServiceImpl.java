@@ -3,9 +3,9 @@ package com.github.ku4marez.clinicmanagement.service.impl;
 import com.github.ku4marez.clinicmanagement.dto.UserDTO;
 import com.github.ku4marez.clinicmanagement.entity.UserEntity;
 import com.github.ku4marez.clinicmanagement.exception.UserNotFoundException;
+import com.github.ku4marez.clinicmanagement.mapper.UserMapper;
 import com.github.ku4marez.clinicmanagement.repository.UserRepository;
 import com.github.ku4marez.clinicmanagement.service.UserService;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,38 +14,38 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
+    private final UserMapper modelMapper;
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper modelMapper) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
-        UserEntity userEntity = modelMapper.map(userDTO, UserEntity.class);
+        UserEntity userEntity = modelMapper.toEntity(userDTO);
         UserEntity savedUser = userRepository.save(userEntity);
-        return modelMapper.map(savedUser, UserDTO.class);
+        return modelMapper.toDto(savedUser);
     }
 
     @Override
     public UserDTO findUserByEmailCaseSensitive(String email) {
         UserEntity userEntity = userRepository.findByEmailCaseInsensitive(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
-        return modelMapper.map(userEntity, UserDTO.class);
+        return modelMapper.toDto(userEntity);
     }
 
     @Override
     public UserDTO getUserById(String id) {
         return userRepository.findById(id)
-                .map(user -> modelMapper.map(user, UserDTO.class))
+                .map(modelMapper::toDto)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @Override
     public Page<UserDTO> getAllUsers(Pageable pageable) {
         Page<UserEntity> usersPage = userRepository.findAll(pageable);
-        return usersPage.map(user -> modelMapper.map(user, UserDTO.class));
+        return usersPage.map(modelMapper::toDto);
     }
 
     @Override
@@ -53,10 +53,10 @@ public class UserServiceImpl implements UserService {
         UserEntity existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
-        modelMapper.map(userDTO, existingUser);
+        modelMapper.updateEntityFromDto(userDTO, existingUser);
 
         UserEntity updatedUser = userRepository.save(existingUser);
-        return modelMapper.map(updatedUser, UserDTO.class);
+        return modelMapper.toDto(updatedUser);
     }
 
     @Override

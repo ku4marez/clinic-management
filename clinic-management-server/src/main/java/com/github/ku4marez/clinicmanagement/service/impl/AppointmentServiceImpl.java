@@ -5,9 +5,11 @@ import com.github.ku4marez.clinicmanagement.entity.AppointmentEntity;
 
 import com.github.ku4marez.clinicmanagement.exception.AppointmentNotFoundException;
 import com.github.ku4marez.clinicmanagement.exception.AppointmentUnexpectedException;
+import com.github.ku4marez.clinicmanagement.mapper.AppointmentMapper;
 import com.github.ku4marez.clinicmanagement.repository.AppointmentRepository;
 import com.github.ku4marez.clinicmanagement.service.AppointmentService;
-import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,9 +19,9 @@ import java.util.List;
 public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
-    private final ModelMapper modelMapper;
+    private final AppointmentMapper modelMapper;
 
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, ModelMapper modelMapper) {
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentMapper modelMapper) {
         this.appointmentRepository = appointmentRepository;
         this.modelMapper = modelMapper;
     }
@@ -29,17 +31,22 @@ public class AppointmentServiceImpl implements AppointmentService {
         validateAppointmentDate(appointmentDTO.dateTime());
         checkForOverlappingAppointments(appointmentDTO);
 
-        AppointmentEntity appointmentEntity = modelMapper.map(appointmentDTO, AppointmentEntity.class);
+        AppointmentEntity appointmentEntity = modelMapper.toEntity(appointmentDTO);
         AppointmentEntity savedAppointment = appointmentRepository.save(appointmentEntity);
 
-        return modelMapper.map(savedAppointment, AppointmentDTO.class);
+        return modelMapper.toDto(savedAppointment);
     }
 
     @Override
     public AppointmentDTO getAppointmentById(String id) {
         return appointmentRepository.findById(id)
-                .map(appointment -> modelMapper.map(appointment, AppointmentDTO.class))
+                .map(modelMapper::toDto)
                 .orElseThrow(() -> new AppointmentNotFoundException(id));
+    }
+
+    @Override
+    public Page<AppointmentDTO> getAllAppointments(Pageable pageable) {
+        return appointmentRepository.findAll(pageable).map(modelMapper::toDto);
     }
 
     @Override
@@ -49,7 +56,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .filter(appointment -> doctorId.equals(appointment.getDoctorId()))
                 .toList();
         return appointments.stream()
-                .map(appointment -> modelMapper.map(appointment, AppointmentDTO.class))
+                .map(modelMapper::toDto)
                 .toList();
     }
 
@@ -60,7 +67,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .filter(appointment -> patientId.equals(appointment.getPatientId()))
                 .toList();
         return appointments.stream()
-                .map(appointment -> modelMapper.map(appointment, AppointmentDTO.class))
+                .map(modelMapper::toDto)
                 .toList();
     }
 
