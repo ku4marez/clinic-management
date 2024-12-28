@@ -2,6 +2,7 @@ package com.github.ku4marez.clinicmanagement.service.impl;
 
 import com.github.ku4marez.clinicmanagement.entity.UserEntity;
 import com.github.ku4marez.clinicmanagement.repository.UserRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
+    @Cacheable(value = "userDetails", key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
@@ -29,3 +31,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .build();
     }
 }
+

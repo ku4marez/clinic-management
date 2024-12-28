@@ -6,6 +6,9 @@ import com.github.ku4marez.clinicmanagement.exception.UserNotFoundException;
 import com.github.ku4marez.clinicmanagement.mapper.UserMapper;
 import com.github.ku4marez.clinicmanagement.repository.UserRepository;
 import com.github.ku4marez.clinicmanagement.service.UserService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = "users", allEntries = true)
     public UserDTO createUser(UserDTO userDTO) {
         UserEntity userEntity = modelMapper.toEntity(userDTO);
         UserEntity savedUser = userRepository.save(userEntity);
@@ -29,6 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "'user_' + #email")
     public UserDTO findUserByEmailCaseSensitive(String email) {
         UserEntity userEntity = userRepository.findByEmailCaseInsensitive(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
@@ -36,6 +41,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "'user_' + #id")
     public UserDTO getUserById(String id) {
         return userRepository.findById(id)
                 .map(modelMapper::toDto)
@@ -43,12 +49,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "'users_' + #pageable.pageNumber + '_' + #pageable.pageSize")
     public Page<UserDTO> getAllUsers(Pageable pageable) {
         Page<UserEntity> usersPage = userRepository.findAll(pageable);
         return usersPage.map(modelMapper::toDto);
     }
 
     @Override
+    @CachePut(value = "users", key = "'user_' + #id")
+    @CacheEvict(value = "userDetails", key = "#userDTO.email")
     public UserDTO updateUser(String id, UserDTO userDTO) {
         UserEntity existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
@@ -60,6 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = {"users", "userDetails"}, key = "'user_' + #id")
     public void deleteUser(String id) {
         userRepository.deleteById(id);
     }

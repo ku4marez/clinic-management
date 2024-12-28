@@ -6,6 +6,9 @@ import com.github.ku4marez.clinicmanagement.exception.DoctorNotFoundException;
 import com.github.ku4marez.clinicmanagement.mapper.DoctorMapper;
 import com.github.ku4marez.clinicmanagement.repository.DoctorRepository;
 import com.github.ku4marez.clinicmanagement.service.DoctorService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,12 +25,14 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    @Cacheable(value = "doctors", key = "'search_' + #name + '_' + #pageable.pageNumber + '_' + #pageable.pageSize")
     public Page<DoctorDTO> searchDoctor(String name, Pageable pageable) {
         Page<DoctorEntity> result = doctorRepository.searchByName(name, pageable);
         return result.map(modelMapper::toDto);
     }
 
     @Override
+    @CacheEvict(value = "doctors", allEntries = true)
     public DoctorDTO createDoctor(DoctorDTO doctorDTO) {
         DoctorEntity entity = modelMapper.toEntity(doctorDTO);
         DoctorEntity saved = doctorRepository.save(entity);
@@ -35,11 +40,13 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    @Cacheable(value = "doctors", key = "'all_' + #pageable.pageNumber + '_' + #pageable.pageSize")
     public Page<DoctorDTO> getAllDoctors(Pageable pageable) {
         return doctorRepository.findAll(pageable).map(modelMapper::toDto);
     }
 
     @Override
+    @Cacheable(value = "doctors", key = "'doctor_email_' + #email")
     public DoctorDTO findDoctorByEmailCaseSensitive(String email) {
         return doctorRepository.findByEmailCaseInsensitive(email)
                 .map(modelMapper::toDto)
@@ -47,6 +54,7 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    @CachePut(value = "doctors", key = "'doctor_' + #id")
     public DoctorDTO updateDoctor(String id, DoctorDTO doctorDTO) {
         DoctorEntity existingDoctor = doctorRepository.findById(id)
                 .orElseThrow(() -> new DoctorNotFoundException(id));
@@ -58,7 +66,9 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    @CacheEvict(value = "doctors", key = "'doctor_' + #id")
     public void deleteDoctor(String id) {
         doctorRepository.deleteById(id);
     }
 }
+
