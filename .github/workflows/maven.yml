@@ -1,0 +1,61 @@
+name: Build and Test Client and Server
+
+on:
+  push:
+    branches:
+      - main
+      - development
+  pull_request:
+    branches:
+      - main
+      - development
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Java for the server
+      - name: Set up JDK 21 for Server
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: 'temurin'
+          cache: maven
+
+      # Build and test the server
+      # Skip tests for now
+      - name: Build Server with Maven
+        working-directory: clinic-management-server
+        run: mvn clean install --no-transfer-progress -DskipTests
+
+      # Upload server artifact
+      - name: Upload Server Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: clinic-management-server-jar
+          path: clinic-management-server/target/*.jar
+
+      # Set up Node.js for the client
+      - name: Set up Node.js for Client
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # Install dependencies and build the client
+      - name: Install Dependencies and Build Client
+        working-directory: clinic-management-client
+        run: |
+          npm install
+          npm run build
+
+      # Upload client artifact
+      - name: Upload Client Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: clinic-management-client-build
+          path: clinic-management-client/build
