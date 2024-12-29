@@ -22,8 +22,15 @@ jobs:
       # Install Docker Compose
       - name: Install Docker Compose
         run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/v2.22.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
+          DOCKER_COMPOSE_VERSION=2.22.1
+          curl -fsSL "https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o docker-compose
+          chmod +x docker-compose
+          sudo mv docker-compose /usr/local/bin/docker-compose
+          docker-compose --version
+
+      # Verify Docker is running
+      - name: Verify Docker Setup
+        run: docker info
 
       # Adjust system settings for MongoDB
       - name: Adjust System Settings
@@ -31,7 +38,7 @@ jobs:
           sudo sysctl -w vm.max_map_count=1677720
           sudo sysctl -w vm.swappiness=1
 
-      # Start Docker Compose for testing
+      # Start Docker Compose for MongoDB
       - name: Start MongoDB with Docker Compose
         run: docker-compose -f clinic-management-server/src/test/resources/docker-compose.yml up -d
 
