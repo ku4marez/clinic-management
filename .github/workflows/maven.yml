@@ -1,4 +1,4 @@
-name: Build, Test, and Package Client and Server
+name: Build and Test Client and Server
 
 on:
   push:
@@ -14,21 +14,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      mongo:
-        image: mongo:latest
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd "echo 'db.stats()' | mongo localhost:27017/test --quiet"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 3
-
     steps:
       # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      # Install Docker Compose
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.22.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
+      # Adjust system settings for MongoDB
+      - name: Adjust System Settings
+        run: |
+          sudo sysctl -w vm.max_map_count=1677720
+          sudo sysctl -w vm.swappiness=1
+
+      # Start Docker Compose for testing
+      - name: Start MongoDB with Docker Compose
+        run: docker-compose -f clinic-management-server/src/test/resources/docker-compose.yml up -d
 
       # Set up Java for the server
       - name: Set up JDK 21 for Server
@@ -38,52 +43,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # Start Docker Compose
-      - name: Start Docker Compose
-        run: |
-          docker-compose -f clinic-management-server/src/test/resources/docker-compose.yml up -d
-
-      # Wait for MongoDB to be ready
-      - name: Wait for MongoDB
-        run: |
-          until docker exec $(docker ps -q -f name=mongo) mongo --eval 'db.runCommand({ ping: 1 })' &> /dev/null; do
-            echo "Waiting for MongoDB to be ready..."
-            sleep 5
-          done
-
-      # Build and test the server
-      - name: Build and Test Server
+      # Run Tests
+      - name: Run Tests
         working-directory: clinic-management-server
-        run: mvn clean install --no-transfer-progress
+        run: mvn test
 
-      # Upload server artifact
-      - name: Upload Server Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: clinic-management-server-jar
-          path: clinic-management-server/target/*.jar
-
-      # Tear down Docker Compose after tests
-      - name: Tear Down Docker Compose
-        if: always()
+      # Tear down Docker Compose
+      - name: Tear Down MongoDB
         run: docker-compose -f clinic-management-server/src/test/resources/docker-compose.yml down
-
-      # Set up Node.js for the client
-      - name: Set up Node.js for Client
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-
-      # Install dependencies and build the client
-      - name: Install Dependencies and Build Client
-        working-directory: clinic-management-client
-        run: |
-          npm install
-          npm run build
-
-      # Upload client artifact
-      - name: Upload Client Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: clinic-management-client-build
-          path: clinic-management-client/build
