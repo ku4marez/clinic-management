@@ -1,26 +1,38 @@
 package com.github.ku4marez.clinicmanagement.repository;
 
 import com.github.ku4marez.clinicmanagement.entity.UserEntity;
+import com.github.ku4marez.clinicmanagement.entity.enums.Role;
 import com.github.ku4marez.clinicmanagement.util.CreateEntityUtil;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
 import java.util.Optional;
 
-import static com.github.ku4marez.clinicmanagement.util.CreateEntityUtil.DEFAULT_EMAIL;
-import static com.github.ku4marez.clinicmanagement.util.CreateEntityUtil.DEFAULT_FIRST_NAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataMongoTest
-@ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
 class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @BeforeEach
+    void cleanDatabaseBeforeEachTest() {
+        userRepository.deleteAll();
+    }
+
+    @AfterEach
+    void cleanDatabaseAfterEachTest() {
+        userRepository.deleteAll();
+    }
 
     @Test
     void testFindById_Success() {
@@ -30,7 +42,7 @@ class UserRepositoryTest {
         Optional<UserEntity> result = userRepository.findById(CreateEntityUtil.DEFAULT_ID);
 
         assertTrue(result.isPresent());
-        assertEquals(DEFAULT_FIRST_NAME, result.get().getFirstName());
+        assertEquals(CreateEntityUtil.DEFAULT_FIRST_NAME, result.get().getFirstName());
     }
 
     @Test
@@ -38,10 +50,25 @@ class UserRepositoryTest {
         UserEntity user = CreateEntityUtil.createDefaultUserEntity();
         userRepository.save(user);
 
-        Optional<UserEntity> result = userRepository.findByEmailCaseInsensitive(DEFAULT_EMAIL);
+        Optional<UserEntity> result = userRepository.findByEmailCaseInsensitive(CreateEntityUtil.DEFAULT_EMAIL);
 
         assertTrue(result.isPresent());
-        assertEquals(DEFAULT_FIRST_NAME, result.get().getFirstName());
+        assertEquals(CreateEntityUtil.DEFAULT_FIRST_NAME, result.get().getFirstName());
+    }
+
+    @Test
+    void testSearchByName_Success() {
+        UserEntity user1 = CreateEntityUtil.createUserEntity("1", "John", "Davskin", "john.davskin@example.com", "password", Role.ADMIN);
+        UserEntity user2 = CreateEntityUtil.createUserEntity("2", "John", "Bobskin", "John.bobskin@example.com", "password", Role.ADMIN);
+        userRepository.save(user1);
+        userRepository.save(user2);
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<UserEntity> result = userRepository.searchByName("John", pageable);
+
+        assertEquals(2, result.getTotalElements());
+        assertEquals("John", result.getContent().get(0).getFirstName());
+        assertEquals("John", result.getContent().get(1).getFirstName());
     }
 
     @Test
@@ -50,17 +77,4 @@ class UserRepositoryTest {
 
         assertFalse(result.isPresent());
     }
-
-    @Test
-    void testFindAllUsers() {
-        List<UserEntity> users = CreateEntityUtil.createUserEntityList();
-        userRepository.saveAll(users);
-
-        List<UserEntity> result = userRepository.findAll();
-
-        assertEquals(2, result.size());
-        assertEquals(DEFAULT_FIRST_NAME, result.get(0).getFirstName());
-        assertEquals(DEFAULT_FIRST_NAME, result.get(1).getFirstName());
-    }
 }
-

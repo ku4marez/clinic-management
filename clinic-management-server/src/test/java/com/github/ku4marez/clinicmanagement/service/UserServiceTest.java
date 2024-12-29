@@ -2,8 +2,8 @@ package com.github.ku4marez.clinicmanagement.service;
 
 import com.github.ku4marez.clinicmanagement.dto.UserDTO;
 import com.github.ku4marez.clinicmanagement.entity.UserEntity;
-import com.github.ku4marez.clinicmanagement.entity.enums.Role;
 import com.github.ku4marez.clinicmanagement.exception.UserNotFoundException;
+import com.github.ku4marez.clinicmanagement.mapper.UserMapper;
 import com.github.ku4marez.clinicmanagement.repository.UserRepository;
 import com.github.ku4marez.clinicmanagement.service.impl.UserServiceImpl;
 import com.github.ku4marez.clinicmanagement.util.CreateEntityUtil;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-import static com.github.ku4marez.clinicmanagement.util.CreateEntityUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -31,18 +30,25 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private UserMapper modelMapper;
+
     @InjectMocks
     private UserServiceImpl userService;
 
     @Test
     void testGetUserById() {
         UserEntity user = CreateEntityUtil.createDefaultUserEntity();
+        UserDTO userDTO = CreateEntityUtil.createDefaultUserDTO();
+
         when(userRepository.findById(CreateEntityUtil.DEFAULT_ID)).thenReturn(Optional.of(user));
+        when(modelMapper.toDto(user)).thenReturn(userDTO);
 
         UserDTO result = userService.getUserById(CreateEntityUtil.DEFAULT_ID);
 
         assertEquals(CreateEntityUtil.DEFAULT_FIRST_NAME, result.firstName());
         verify(userRepository, times(1)).findById(CreateEntityUtil.DEFAULT_ID);
+        verify(modelMapper, times(1)).toDto(user);
     }
 
     @Test
@@ -50,6 +56,7 @@ class UserServiceTest {
         when(userRepository.findById(CreateEntityUtil.DEFAULT_ID)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> userService.getUserById(CreateEntityUtil.DEFAULT_ID));
+        verify(userRepository, times(1)).findById(CreateEntityUtil.DEFAULT_ID);
     }
 
     @Test
@@ -57,13 +64,17 @@ class UserServiceTest {
         UserDTO userDTO = CreateEntityUtil.createDefaultUserDTO();
         UserEntity userEntity = CreateEntityUtil.createDefaultUserEntity();
 
-        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+        when(modelMapper.toEntity(userDTO)).thenReturn(userEntity);
+        when(userRepository.save(userEntity)).thenReturn(userEntity);
+        when(modelMapper.toDto(userEntity)).thenReturn(userDTO);
 
         UserDTO result = userService.createUser(userDTO);
 
         assertEquals(CreateEntityUtil.DEFAULT_FIRST_NAME, result.firstName());
         assertEquals(CreateEntityUtil.DEFAULT_LAST_NAME, result.lastName());
-        verify(userRepository, times(1)).save(any(UserEntity.class));
+        verify(modelMapper, times(1)).toEntity(userDTO);
+        verify(userRepository, times(1)).save(userEntity);
+        verify(modelMapper, times(1)).toDto(userEntity);
     }
 
     @Test
@@ -78,15 +89,19 @@ class UserServiceTest {
         Pageable pageable = PageRequest.of(0, 2);
         List<UserEntity> users = CreateEntityUtil.createUserEntityList();
         Page<UserEntity> userPage = new PageImpl<>(users, pageable, users.size());
+        List<UserDTO> userDTOs = CreateEntityUtil.createUserDTOList();
 
         when(userRepository.findAll(pageable)).thenReturn(userPage);
+        when(modelMapper.toDto(users.get(0))).thenReturn(userDTOs.get(0));
+        when(modelMapper.toDto(users.get(1))).thenReturn(userDTOs.get(1));
 
         Page<UserDTO> result = userService.getAllUsers(pageable);
 
         assertEquals(2, result.getTotalElements());
-        assertEquals(DEFAULT_FIRST_NAME, result.getContent().get(0).firstName());
-        assertEquals(OTHER_FIRST_NAME, result.getContent().get(1).firstName());
+        assertEquals(CreateEntityUtil.DEFAULT_FIRST_NAME, result.getContent().get(0).firstName());
+        assertEquals(CreateEntityUtil.OTHER_FIRST_NAME, result.getContent().get(1).firstName());
         verify(userRepository, times(1)).findAll(pageable);
+        verify(modelMapper, times(2)).toDto(any(UserEntity.class));
     }
 
     @Test
@@ -96,32 +111,38 @@ class UserServiceTest {
 
         when(userRepository.findById(CreateEntityUtil.DEFAULT_ID)).thenReturn(Optional.of(existingUser));
         when(userRepository.save(any(UserEntity.class))).thenReturn(existingUser);
+        when(modelMapper.toDto(any(UserEntity.class))).thenReturn(userDTO);
 
         UserDTO updatedUser = userService.updateUser(CreateEntityUtil.DEFAULT_ID, userDTO);
 
-        assertEquals(OTHER_FIRST_NAME, updatedUser.firstName());
+        assertEquals(CreateEntityUtil.OTHER_FIRST_NAME, updatedUser.firstName());
         verify(userRepository, times(1)).findById(CreateEntityUtil.DEFAULT_ID);
-        verify(userRepository, times(1)).save(any(UserEntity.class));
+        verify(modelMapper, times(1)).updateEntityFromDto(userDTO, existingUser);
+        verify(userRepository, times(1)).save(existingUser);
+        verify(modelMapper, times(1)).toDto(existingUser);
     }
+
 
     @Test
     void testFindUserByEmailCaseSensitive_Success() {
-        UserEntity user = CreateEntityUtil.createUserEntity(DEFAULT_ID, DEFAULT_FIRST_NAME, DEFAULT_LAST_NAME, DEFAULT_EMAIL, DEFAULT_PASSWORD, Role.PATIENT);
+        UserEntity user = CreateEntityUtil.createDefaultUserEntity();
+        UserDTO userDTO = CreateEntityUtil.createDefaultUserDTO();
 
-        when(userRepository.findByEmailCaseInsensitive(DEFAULT_EMAIL)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmailCaseInsensitive(CreateEntityUtil.DEFAULT_EMAIL)).thenReturn(Optional.of(user));
+        when(modelMapper.toDto(user)).thenReturn(userDTO);
 
-        UserDTO result = userService.findUserByEmailCaseSensitive(DEFAULT_EMAIL);
+        UserDTO result = userService.findUserByEmailCaseSensitive(CreateEntityUtil.DEFAULT_EMAIL);
 
-        assertEquals(DEFAULT_FIRST_NAME, result.firstName());
-        verify(userRepository, times(1)).findByEmailCaseInsensitive(DEFAULT_EMAIL);
+        assertEquals(CreateEntityUtil.DEFAULT_FIRST_NAME, result.firstName());
+        verify(userRepository, times(1)).findByEmailCaseInsensitive(CreateEntityUtil.DEFAULT_EMAIL);
+        verify(modelMapper, times(1)).toDto(user);
     }
 
     @Test
     void testFindUserByEmailCaseSensitive_UserNotFound() {
-        when(userRepository.findByEmailCaseInsensitive(DEFAULT_EMAIL)).thenReturn(Optional.empty());
+        when(userRepository.findByEmailCaseInsensitive(CreateEntityUtil.DEFAULT_EMAIL)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.findUserByEmailCaseSensitive(DEFAULT_EMAIL));
+        assertThrows(UserNotFoundException.class, () -> userService.findUserByEmailCaseSensitive(CreateEntityUtil.DEFAULT_EMAIL));
+        verify(userRepository, times(1)).findByEmailCaseInsensitive(CreateEntityUtil.DEFAULT_EMAIL);
     }
 }
-
-

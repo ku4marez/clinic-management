@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +52,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable(value = "users", key = "'users_' + #pageable.pageNumber + '_' + #pageable.pageSize")
     public Page<UserDTO> getAllUsers(Pageable pageable) {
+        if (pageable == null) {
+            pageable = PageRequest.of(0, 10); // Provide a default Pageable
+        }
         Page<UserEntity> usersPage = userRepository.findAll(pageable);
+
         return usersPage.map(modelMapper::toDto);
     }
 
