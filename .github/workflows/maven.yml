@@ -19,14 +19,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Install Docker Compose
-      - name: Install Docker Compose
+      # Install Docker Compose as a CLI plugin
+      - name: Install Docker Compose Plugin
         run: |
-          DOCKER_COMPOSE_VERSION=2.22.1
-          curl -fsSL "https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o docker-compose
-          chmod +x docker-compose
-          sudo mv docker-compose /usr/local/bin/docker-compose
-          docker-compose --version
+          mkdir -p ~/.docker/cli-plugins/
+          curl -fsSL "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o ~/.docker/cli-plugins/docker-compose
+          chmod +x ~/.docker/cli-plugins/docker-compose
+          docker compose version
 
       # Verify Docker is running
       - name: Verify Docker Setup
@@ -40,7 +39,7 @@ jobs:
 
       # Start Docker Compose for MongoDB
       - name: Start MongoDB with Docker Compose
-        run: docker-compose -f clinic-management-server/src/test/resources/docker-compose.yml up -d
+        run: docker compose -f clinic-management-server/src/test/resources/docker-compose.yml up -d
 
       # Set up Java for the server
       - name: Set up JDK 21 for Server
@@ -57,4 +56,4 @@ jobs:
 
       # Tear down Docker Compose
       - name: Tear Down MongoDB
-        run: docker-compose -f clinic-management-server/src/test/resources/docker-compose.yml down
+        run: docker compose -f clinic-management-server/src/test/resources/docker-compose.yml down
