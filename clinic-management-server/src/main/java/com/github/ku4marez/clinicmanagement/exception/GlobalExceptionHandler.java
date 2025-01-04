@@ -1,6 +1,7 @@
 package com.github.ku4marez.clinicmanagement.exception;
 
-import com.github.ku4marez.clinicmanagement.dto.response.ErrorResponse;
+import com.github.ku4marez.commonlibraries.entity.dto.response.ErrorResponse;
+import com.github.ku4marez.commonlibraries.entity.exception.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

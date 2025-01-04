@@ -7,9 +7,9 @@
 		<version>3.1.4</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.github.ku4marez.clinicmanagement</groupId>
+	<groupId>com.github.ku4marez</groupId>
 	<artifactId>clinic-management</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>clinic-management</name>
 	<description>CRUD application for managing patients, appointments, and doctors.</description>
 
@@ -23,7 +23,9 @@
 		<logback.version>1.4.11</logback.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 		<hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
+		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<springdoc.version>2.2.0</springdoc.version>
+		<commonlibraries.version>1.0.0</commonlibraries.version>
 	</properties>
 
 	<dependencies>
@@ -43,6 +45,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.ku4marez</groupId>
+			<artifactId>common-libraries</artifactId>
+			<version>${commonlibraries.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -130,7 +137,7 @@
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
-			<version>3.0.2</version>
+			<version>${jakarta.validation.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>

@@ -17,11 +17,15 @@ function LoginPage() {
 
         try {
             const response = await apiClient.post('/auth/login', { email, password });
-            const token = response.data.token;
-            console.log(token)
-            localStorage.setItem('token', token); // Store token in localStorage
-            apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Set Authorization header
-            navigate('/'); // Redirect to main layout
+
+            const { accessToken, refreshToken } = response.data;
+
+            localStorage.setItem('token', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
+
+            apiClient.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+
+            navigate('/');
         } catch (err) {
             setError('Invalid credentials. Please try again.');
         } finally {
