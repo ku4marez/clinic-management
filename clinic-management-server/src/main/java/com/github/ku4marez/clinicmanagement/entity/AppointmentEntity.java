@@ -4,7 +4,6 @@ import com.github.ku4marez.commonlibraries.entity.entity.common.PersistentAudite
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -14,8 +13,6 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Document(collection = "appointments")
 public class AppointmentEntity extends PersistentAuditedEntity {
-    @Id
-    private String id;
     private String doctorId;
     private String patientId;
     private LocalDateTime dateTime;
