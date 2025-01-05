@@ -43,7 +43,7 @@ jobs:
       - name: Adjust System Settings
         run: |
           sudo sysctl -w vm.max_map_count=1677720
-          sudo sysctl -w swappiness=1
+          echo "Skipped adjusting swappiness as it is not supported on this runner."
 
       # Start Docker Compose for MongoDB
       - name: Start MongoDB with Docker Compose
