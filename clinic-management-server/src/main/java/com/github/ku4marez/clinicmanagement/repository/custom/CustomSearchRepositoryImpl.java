@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.repository.query.MongoEntityInformation;
 import org.springframework.data.mongodb.repository.support.SimpleMongoRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,4 +44,3 @@ public class CustomSearchRepositoryImpl<T, ID> extends SimpleMongoRepository<T, 
         return new PageImpl<>(results, pageable, total);
     }
 }
-

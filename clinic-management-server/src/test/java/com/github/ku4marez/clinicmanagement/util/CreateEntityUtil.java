@@ -1,11 +1,14 @@
 package com.github.ku4marez.clinicmanagement.util;
 
+import com.github.ku4marez.clinicmanagement.dto.AppointmentDTO;
 import com.github.ku4marez.clinicmanagement.dto.DoctorDTO;
 import com.github.ku4marez.clinicmanagement.dto.PatientDTO;
+import com.github.ku4marez.clinicmanagement.entity.AppointmentEntity;
 import com.github.ku4marez.clinicmanagement.entity.DoctorEntity;
 import com.github.ku4marez.clinicmanagement.entity.PatientEntity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class CreateEntityUtil {
 
@@ -30,6 +33,12 @@ public class CreateEntityUtil {
     public static final String PATIENT_PHONE = "987-654-3210";
     public static final String PATIENT_ADDRESS = "123 Main St, Springfield";
     public static final String PATIENT_RECORD_NUMBER = "PAT123456";
+
+    // Appointment Constants
+    public static final String APPOINTMENT_ID = "1";
+    public static final LocalDateTime APPOINTMENT_DATETIME = LocalDateTime.now().plusHours(1);
+    public static final String APPOINTMENT_STATUS = "Scheduled";
+    public static final String APPOINTMENT_REASON = "Routine Checkup";
 
     public static DoctorEntity createDefaultDoctorEntity() {
         return createDoctorEntity(DOCTOR_ID, DOCTOR_FIRST_NAME, DOCTOR_LAST_NAME, DOCTOR_EMAIL, DOCTOR_PHONE, DOCTOR_SPECIALTY, DOCTOR_LICENSE);
@@ -85,5 +94,30 @@ public class CreateEntityUtil {
         patient.setAddress(address);
         patient.setMedicalRecordNumber(recordNumber);
         return patient;
+    }
+
+    public static AppointmentEntity createDefaultAppointmentEntity() {
+        return createAppointmentEntity(APPOINTMENT_ID, DOCTOR_ID, PATIENT_ID, APPOINTMENT_DATETIME, APPOINTMENT_STATUS, APPOINTMENT_REASON);
+    }
+
+    public static AppointmentEntity createAppointmentEntity(String id, String doctorId, String patientId, LocalDateTime dateTime, String status, String reason) {
+        AppointmentEntity appointment = new AppointmentEntity();
+        appointment.setId(id);
+        appointment.setDoctorId(doctorId);
+        appointment.setPatientId(patientId);
+        appointment.setDateTime(dateTime);
+        appointment.setStatus(status);
+        appointment.setReason(reason);
+        return appointment;
+    }
+
+    public static AppointmentDTO createDefaultAppointmentDTO() {
+        return AppointmentDTO.builder()
+                .reason(APPOINTMENT_REASON)
+                .status(APPOINTMENT_STATUS)
+                .dateTime(APPOINTMENT_DATETIME)
+                .patientId(PATIENT_ID)
+                .doctorId(DOCTOR_ID)
+                .build();
     }
 }

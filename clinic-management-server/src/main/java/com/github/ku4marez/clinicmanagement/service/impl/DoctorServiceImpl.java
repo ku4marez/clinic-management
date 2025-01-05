@@ -71,4 +71,3 @@ public class DoctorServiceImpl implements DoctorService {
         doctorRepository.deleteById(id);
     }
 }
-
