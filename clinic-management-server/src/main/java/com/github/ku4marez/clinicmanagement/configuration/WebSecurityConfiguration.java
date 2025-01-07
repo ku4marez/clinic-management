@@ -1,7 +1,7 @@
 package com.github.ku4marez.clinicmanagement.configuration;
 
-import com.github.ku4marez.commonlibraries.entity.util.CorsConfigurationUtil;
-import com.github.ku4marez.commonlibraries.entity.util.JwtUtil;
+import com.github.ku4marez.commonlibraries.util.CorsConfigurationUtil;
+import com.github.ku4marez.commonlibraries.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
 package com.github.ku4marez.clinicmanagement.entity;
 
-import com.github.ku4marez.commonlibraries.entity.entity.common.PersistentAuditedEntity;
+import com.github.ku4marez.commonlibraries.entity.common.PersistentAuditedEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.EqualsAndHashCode;

@@ -25,7 +25,7 @@
 		<hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<springdoc.version>2.2.0</springdoc.version>
-		<commonlibraries.version>1.0.5</commonlibraries.version>
+		<commonlibraries.version>1.0.6</commonlibraries.version>
 	</properties>
 
 	<dependencies>
@@ -78,6 +78,12 @@
 					<artifactId>junit-vintage-engine</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<!-- Kafka -->
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
 		</dependency>
 
 		<!-- JSON Web Tokens -->
