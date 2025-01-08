@@ -10,7 +10,7 @@
 	<groupId>com.github.ku4marez</groupId>
 	<artifactId>clinic-management</artifactId>
 	<version>1.0.0</version>
-	<name>clinic-management</name>
+	<name>Clinic Management Server</name>
 	<description>CRUD application for managing patients, appointments, and doctors.</description>
 
 	<properties>
@@ -25,7 +25,7 @@
 		<hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<springdoc.version>2.2.0</springdoc.version>
-		<commonlibraries.version>1.0.6</commonlibraries.version>
+		<commonlibraries.version>1.0.8</commonlibraries.version>
 	</properties>
 
 	<dependencies>

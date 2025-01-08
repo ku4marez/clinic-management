@@ -3,11 +3,13 @@ package com.github.ku4marez.clinicmanagement.listener;
 import com.github.ku4marez.clinicmanagement.entity.AppointmentEntity;
 import com.github.ku4marez.clinicmanagement.event.AppointmentCreatedEvent;
 import com.github.ku4marez.clinicmanagement.event.AppointmentUpdatedEvent;
-import com.github.ku4marez.commonlibraries.dto.KafkaEvent;
+import com.github.ku4marez.commonlibraries.dto.event.KafkaEvent;
 import com.github.ku4marez.commonlibraries.util.KafkaProducerUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+
+import static com.github.ku4marez.commonlibraries.constant.KafkaConstants.*;
 
 @Component
 @Slf4j
@@ -34,12 +36,12 @@ public class AppointmentEventListener {
     }
 
     public void publishAppointmentCreatedEvent(String appointmentId, String patientId) {
-        KafkaEvent<String> event = new KafkaEvent<>("APPOINTMENT_CREATED", appointmentId);
-        kafkaProducerUtil.sendMessage("appointment.created", patientId, event.toJson());
+        KafkaEvent<String> event = new KafkaEvent<>(APPOINTMENT_CREATED_EVENT, appointmentId);
+        kafkaProducerUtil.sendMessage(APPOINTMENT_CREATED_TOPIC, patientId, event.toJson());
     }
 
     public void publishAppointmentUpdatedEvent(String appointmentId, String patientId) {
-        KafkaEvent<String> event = new KafkaEvent<>("APPOINTMENT_UPDATED", appointmentId);
-        kafkaProducerUtil.sendMessage("appointment.updated", patientId, event.toJson());
+        KafkaEvent<String> event = new KafkaEvent<>(APPOINTMENT_UPDATED_EVENT, appointmentId);
+        kafkaProducerUtil.sendMessage(APPOINTMENT_UPDATED_TOPIC, patientId, event.toJson());
     }
 }
