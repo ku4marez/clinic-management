@@ -1,7 +1,7 @@
 package com.github.ku4marez.clinicmanagement.controller;
 
-import com.github.ku4marez.clinicmanagement.dto.AppointmentDTO;
 import com.github.ku4marez.clinicmanagement.service.AppointmentService;
+import com.github.ku4marez.commonlibraries.dto.AppointmentDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

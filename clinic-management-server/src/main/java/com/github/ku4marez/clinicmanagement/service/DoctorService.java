@@ -1,6 +1,6 @@
 package com.github.ku4marez.clinicmanagement.service;
 
-import com.github.ku4marez.clinicmanagement.dto.DoctorDTO;
+import com.github.ku4marez.commonlibraries.dto.DoctorDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

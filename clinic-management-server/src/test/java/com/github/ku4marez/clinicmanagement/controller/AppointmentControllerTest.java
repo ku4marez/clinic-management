@@ -1,8 +1,8 @@
 package com.github.ku4marez.clinicmanagement.controller;
 
-import com.github.ku4marez.clinicmanagement.dto.AppointmentDTO;
 import com.github.ku4marez.clinicmanagement.service.AppointmentService;
 import com.github.ku4marez.clinicmanagement.util.CreateEntityUtil;
+import com.github.ku4marez.commonlibraries.dto.AppointmentDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

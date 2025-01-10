@@ -1,11 +1,11 @@
 package com.github.ku4marez.clinicmanagement.service;
 
-import com.github.ku4marez.clinicmanagement.dto.PatientDTO;
 import com.github.ku4marez.clinicmanagement.entity.PatientEntity;
 import com.github.ku4marez.clinicmanagement.mapper.PatientMapper;
 import com.github.ku4marez.clinicmanagement.repository.PatientRepository;
 import com.github.ku4marez.clinicmanagement.service.impl.PatientServiceImpl;
 import com.github.ku4marez.clinicmanagement.util.CreateEntityUtil;
+import com.github.ku4marez.commonlibraries.dto.PatientDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

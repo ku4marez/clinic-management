@@ -1,11 +1,11 @@
 package com.github.ku4marez.clinicmanagement.service.impl;
 
-import com.github.ku4marez.clinicmanagement.dto.PatientDTO;
 import com.github.ku4marez.clinicmanagement.entity.PatientEntity;
 import com.github.ku4marez.clinicmanagement.exception.PatientNotFoundException;
 import com.github.ku4marez.clinicmanagement.mapper.PatientMapper;
 import com.github.ku4marez.clinicmanagement.repository.PatientRepository;
 import com.github.ku4marez.clinicmanagement.service.PatientService;
+import com.github.ku4marez.commonlibraries.dto.PatientDTO;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;

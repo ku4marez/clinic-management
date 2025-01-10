@@ -1,12 +1,12 @@
 package com.github.ku4marez.clinicmanagement.service;
 
-import com.github.ku4marez.clinicmanagement.dto.AppointmentDTO;
 import com.github.ku4marez.clinicmanagement.entity.AppointmentEntity;
 import com.github.ku4marez.clinicmanagement.event.AppointmentCreatedEvent;
 import com.github.ku4marez.clinicmanagement.mapper.AppointmentMapper;
 import com.github.ku4marez.clinicmanagement.repository.AppointmentRepository;
 import com.github.ku4marez.clinicmanagement.service.impl.AppointmentServiceImpl;
 import com.github.ku4marez.clinicmanagement.util.CreateEntityUtil;
+import com.github.ku4marez.commonlibraries.dto.AppointmentDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

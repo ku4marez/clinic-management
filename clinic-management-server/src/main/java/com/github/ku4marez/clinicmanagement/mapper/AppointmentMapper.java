@@ -1,7 +1,7 @@
 package com.github.ku4marez.clinicmanagement.mapper;
 
-import com.github.ku4marez.clinicmanagement.dto.AppointmentDTO;
 import com.github.ku4marez.clinicmanagement.entity.AppointmentEntity;
+import com.github.ku4marez.commonlibraries.dto.AppointmentDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 

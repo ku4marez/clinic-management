@@ -1,11 +1,11 @@
 package com.github.ku4marez.clinicmanagement.util;
 
-import com.github.ku4marez.clinicmanagement.dto.AppointmentDTO;
-import com.github.ku4marez.clinicmanagement.dto.DoctorDTO;
-import com.github.ku4marez.clinicmanagement.dto.PatientDTO;
 import com.github.ku4marez.clinicmanagement.entity.AppointmentEntity;
 import com.github.ku4marez.clinicmanagement.entity.DoctorEntity;
 import com.github.ku4marez.clinicmanagement.entity.PatientEntity;
+import com.github.ku4marez.commonlibraries.dto.AppointmentDTO;
+import com.github.ku4marez.commonlibraries.dto.DoctorDTO;
+import com.github.ku4marez.commonlibraries.dto.PatientDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

@@ -1,7 +1,7 @@
 package com.github.ku4marez.clinicmanagement.mapper;
 
-import com.github.ku4marez.clinicmanagement.dto.DoctorDTO;
 import com.github.ku4marez.clinicmanagement.entity.DoctorEntity;
+import com.github.ku4marez.commonlibraries.dto.DoctorDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 

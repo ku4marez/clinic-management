@@ -11,11 +11,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Component
-public class DatabaseInitializer {
+public class DatabaseConfiguration {
 
     private final MongoTemplate mongoTemplate;
 
-    public DatabaseInitializer(MongoTemplate mongoTemplate) {
+    public DatabaseConfiguration(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 

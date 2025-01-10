@@ -1,6 +1,5 @@
 package com.github.ku4marez.clinicmanagement.service.impl;
 
-import com.github.ku4marez.clinicmanagement.dto.AppointmentDTO;
 import com.github.ku4marez.clinicmanagement.entity.AppointmentEntity;
 
 import com.github.ku4marez.clinicmanagement.event.AppointmentCreatedEvent;
@@ -9,6 +8,7 @@ import com.github.ku4marez.clinicmanagement.exception.AppointmentUnexpectedExcep
 import com.github.ku4marez.clinicmanagement.mapper.AppointmentMapper;
 import com.github.ku4marez.clinicmanagement.repository.AppointmentRepository;
 import com.github.ku4marez.clinicmanagement.service.AppointmentService;
+import com.github.ku4marez.commonlibraries.dto.AppointmentDTO;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
