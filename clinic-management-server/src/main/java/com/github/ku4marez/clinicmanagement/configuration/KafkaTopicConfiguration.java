@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import static com.github.ku4marez.commonlibraries.constant.KafkaConstants.APPOIN
 import static com.github.ku4marez.commonlibraries.constant.KafkaConstants.APPOINTMENT_UPDATED_TOPIC;
 
 @Configuration
+@Profile("!test")
 public class KafkaTopicConfiguration {
 
     @Value("${spring.kafka.bootstrap-servers}")
