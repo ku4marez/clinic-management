@@ -25,7 +25,7 @@
 		<hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<springdoc.version>2.2.0</springdoc.version>
-		<commonlibraries.version>1.0.9</commonlibraries.version>
+		<commonlibraries.version>1.1.0</commonlibraries.version>
 	</properties>
 
 	<dependencies>
