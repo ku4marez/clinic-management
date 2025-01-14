@@ -13,7 +13,7 @@ public class LoggingAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
-    @Around("execution(* com.github.ku4marez.clinicmanagement..*(..))")
+    @Around("execution(* com.github.ku4marez.clinicmanagement..*(..)) && !within(org.springframework.web.filter.GenericFilterBean+)")
     public Object logMethodExecution(ProceedingJoinPoint joinPoint) throws Throwable {
         long startTime = System.currentTimeMillis();
         Object result = joinPoint.proceed();

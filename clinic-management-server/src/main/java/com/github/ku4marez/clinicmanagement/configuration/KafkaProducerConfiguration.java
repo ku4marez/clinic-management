@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Configuration;
 public class KafkaProducerConfiguration {
 
     @Value("${spring.kafka.bootstrap-servers}")
-    private static String BOOTSTRAP_SERVERS;
+    private String bootstrapServers;
 
     @Bean
     public KafkaProducerUtil kafkaProducerUtil() {
-        return new KafkaProducerUtil(BOOTSTRAP_SERVERS);
+        return new KafkaProducerUtil(bootstrapServers);
     }
 }
