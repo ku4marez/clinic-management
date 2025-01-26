@@ -2,7 +2,6 @@ package com.github.ku4marez.clinicmanagement.repository;
 
 import com.github.ku4marez.clinicmanagement.entity.DoctorEntity;
 import com.github.ku4marez.clinicmanagement.util.CreateEntityUtil;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +24,7 @@ class DoctorRepositoryTest {
     private DoctorRepository doctorRepository;
 
     @BeforeEach
-    void cleanDatabaseBeforeEachTest() {
-        doctorRepository.deleteAll();
-    }
-
-    @AfterEach
-    void cleanDatabaseAfterEachTest() {
+    void setUp() {
         doctorRepository.deleteAll();
     }
 
