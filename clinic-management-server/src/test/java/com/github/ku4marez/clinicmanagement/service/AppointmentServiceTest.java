@@ -1,5 +1,6 @@
 package com.github.ku4marez.clinicmanagement.service;
 
+import com.github.ku4marez.clinicmanagement.constant.TestConstants;
 import com.github.ku4marez.clinicmanagement.entity.AppointmentEntity;
 import com.github.ku4marez.clinicmanagement.event.AppointmentCreatedEvent;
 import com.github.ku4marez.clinicmanagement.mapper.AppointmentMapper;
@@ -45,7 +46,7 @@ class AppointmentServiceTest {
 
         AppointmentDTO result = appointmentService.createAppointment(appointmentDTO);
 
-        assertEquals(CreateEntityUtil.APPOINTMENT_REASON, result.reason());
+        assertEquals(TestConstants.APPOINTMENT_REASON, result.reason());
         verify(appointmentRepository, times(1)).save(appointmentEntity);
         verify(eventPublisher, times(1)).publishEvent(any(AppointmentCreatedEvent.class));
     }
@@ -55,14 +56,14 @@ class AppointmentServiceTest {
         AppointmentEntity appointmentEntity = CreateEntityUtil.createDefaultAppointmentEntity();
         AppointmentDTO appointmentDTO = CreateEntityUtil.createDefaultAppointmentDTO();
 
-        when(appointmentRepository.findById(CreateEntityUtil.APPOINTMENT_ID))
+        when(appointmentRepository.findById(TestConstants.APPOINTMENT_ID))
                 .thenReturn(Optional.of(appointmentEntity));
         when(modelMapper.toDto(appointmentEntity)).thenReturn(appointmentDTO);
 
-        AppointmentDTO result = appointmentService.getAppointmentById(CreateEntityUtil.APPOINTMENT_ID);
+        AppointmentDTO result = appointmentService.getAppointmentById(TestConstants.APPOINTMENT_ID);
 
-        assertEquals(CreateEntityUtil.APPOINTMENT_REASON, result.reason());
-        verify(appointmentRepository, times(1)).findById(CreateEntityUtil.APPOINTMENT_ID);
+        assertEquals(TestConstants.APPOINTMENT_REASON, result.reason());
+        verify(appointmentRepository, times(1)).findById(TestConstants.APPOINTMENT_ID);
     }
 }
 

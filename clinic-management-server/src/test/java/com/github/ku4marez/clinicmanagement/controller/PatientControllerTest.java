@@ -1,5 +1,6 @@
 package com.github.ku4marez.clinicmanagement.controller;
 
+import com.github.ku4marez.clinicmanagement.constant.TestConstants;
 import com.github.ku4marez.clinicmanagement.service.PatientService;
 import com.github.ku4marez.clinicmanagement.util.CreateEntityUtil;
 import com.github.ku4marez.commonlibraries.dto.PatientDTO;
@@ -59,24 +60,24 @@ class PatientControllerTest {
                             }
                         """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value(CreateEntityUtil.PATIENT_FIRST_NAME));
+                .andExpect(jsonPath("$.firstName").value(TestConstants.PATIENT_FIRST_NAME));
     }
 
     @Test
     void testGetPatientByRecordNumber() throws Exception {
-        when(patientService.getPatientByRecordNumber(CreateEntityUtil.PATIENT_RECORD_NUMBER)).thenReturn(Optional.of(patientDTO));
+        when(patientService.getPatientByRecordNumber(TestConstants.PATIENT_RECORD_NUMBER)).thenReturn(Optional.of(patientDTO));
 
-        mockMvc.perform(get("/patients/{recordNumber}", CreateEntityUtil.PATIENT_RECORD_NUMBER)
+        mockMvc.perform(get("/patients/{recordNumber}", TestConstants.PATIENT_RECORD_NUMBER)
                         .with(SecurityMockMvcRequestPostProcessors.user("doctor").roles("DOCTOR")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.medicalRecordNumber").value(CreateEntityUtil.PATIENT_RECORD_NUMBER));
+                .andExpect(jsonPath("$.medicalRecordNumber").value(TestConstants.PATIENT_RECORD_NUMBER));
     }
 
     @Test
     void testDeletePatient() throws Exception {
-        doNothing().when(patientService).deletePatient(CreateEntityUtil.PATIENT_ID);
+        doNothing().when(patientService).deletePatient(TestConstants.PATIENT_ID);
 
-        mockMvc.perform(delete("/patients/{id}", CreateEntityUtil.PATIENT_ID)
+        mockMvc.perform(delete("/patients/{id}", TestConstants.PATIENT_ID)
                         .with(SecurityMockMvcRequestPostProcessors.user("admin").roles("ADMIN")))
                 .andExpect(status().isNoContent());
     }

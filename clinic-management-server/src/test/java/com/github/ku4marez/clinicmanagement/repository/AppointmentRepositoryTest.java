@@ -1,5 +1,6 @@
 package com.github.ku4marez.clinicmanagement.repository;
 
+import com.github.ku4marez.clinicmanagement.constant.TestConstants;
 import com.github.ku4marez.clinicmanagement.entity.AppointmentEntity;
 import com.github.ku4marez.clinicmanagement.util.CreateEntityUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,18 +32,18 @@ class AppointmentRepositoryTest {
         LocalDateTime now = LocalDateTime.now();
 
         AppointmentEntity appointment1 = CreateEntityUtil.createAppointmentEntity(
-                "1", CreateEntityUtil.DOCTOR_ID, CreateEntityUtil.PATIENT_ID, now.plusHours(1), "Scheduled", "Routine Checkup");
+                "1", TestConstants.DOCTOR_ID, TestConstants.PATIENT_ID, now.plusHours(1), "Scheduled", "Routine Checkup");
         AppointmentEntity appointment2 = CreateEntityUtil.createAppointmentEntity(
-                "2", CreateEntityUtil.DOCTOR_ID, "patient2", now.plusHours(2), "Scheduled", "Follow-up");
+                "2", TestConstants.DOCTOR_ID, "patient2", now.plusHours(2), "Scheduled", "Follow-up");
 
         appointmentRepository.save(appointment1);
         appointmentRepository.save(appointment2);
 
         List<AppointmentEntity> overlappingAppointments = appointmentRepository.findOverlappingAppointments(
-                CreateEntityUtil.DOCTOR_ID, now.plusMinutes(30), now.plusHours(2));
+                TestConstants.DOCTOR_ID, now.plusMinutes(30), now.plusHours(2));
 
         assertEquals(1, overlappingAppointments.size());
-        assertEquals(CreateEntityUtil.PATIENT_ID, overlappingAppointments.get(0).getPatientId());
+        assertEquals(TestConstants.PATIENT_ID, overlappingAppointments.get(0).getPatientId());
     }
 
     @Test
@@ -53,7 +54,7 @@ class AppointmentRepositoryTest {
         appointmentRepository.save(appointment);
 
         List<AppointmentEntity> overlappingAppointments = appointmentRepository.findOverlappingAppointments(
-                CreateEntityUtil.DOCTOR_ID, now.minusHours(2), now.minusHours(1));
+                TestConstants.DOCTOR_ID, now.minusHours(2), now.minusHours(1));
 
         assertTrue(overlappingAppointments.isEmpty());
     }

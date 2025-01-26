@@ -1,5 +1,6 @@
 package com.github.ku4marez.clinicmanagement.repository;
 
+import com.github.ku4marez.clinicmanagement.constant.TestConstants;
 import com.github.ku4marez.clinicmanagement.entity.DoctorEntity;
 import com.github.ku4marez.clinicmanagement.util.CreateEntityUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,10 +34,10 @@ class DoctorRepositoryTest {
         DoctorEntity doctor = CreateEntityUtil.createDefaultDoctorEntity();
         doctorRepository.save(doctor);
 
-        Optional<DoctorEntity> result = doctorRepository.findById(CreateEntityUtil.DOCTOR_ID);
+        Optional<DoctorEntity> result = doctorRepository.findById(TestConstants.DOCTOR_ID);
 
         assertTrue(result.isPresent());
-        assertEquals(CreateEntityUtil.DOCTOR_FIRST_NAME, result.get().getFirstName());
+        assertEquals(TestConstants.DOCTOR_FIRST_NAME, result.get().getFirstName());
     }
 
     @Test

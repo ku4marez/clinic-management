@@ -1,5 +1,6 @@
 package com.github.ku4marez.clinicmanagement.service;
 
+import com.github.ku4marez.clinicmanagement.constant.TestConstants;
 import com.github.ku4marez.clinicmanagement.entity.DoctorEntity;
 import com.github.ku4marez.clinicmanagement.mapper.DoctorMapper;
 import com.github.ku4marez.clinicmanagement.repository.DoctorRepository;
@@ -45,7 +46,7 @@ class DoctorServiceTest {
 
         DoctorDTO result = doctorService.createDoctor(doctorDTO);
 
-        assertEquals(CreateEntityUtil.DOCTOR_FIRST_NAME, result.firstName());
+        assertEquals(TestConstants.DOCTOR_FIRST_NAME, result.firstName());
         verify(doctorRepository, times(1)).save(doctorEntity);
     }
 
@@ -62,7 +63,7 @@ class DoctorServiceTest {
         Page<DoctorDTO> result = doctorService.searchDoctor("John", pageable);
 
         assertEquals(1, result.getTotalElements());
-        assertEquals(CreateEntityUtil.DOCTOR_FIRST_NAME, result.getContent().get(0).firstName());
+        assertEquals(TestConstants.DOCTOR_FIRST_NAME, result.getContent().get(0).firstName());
         verify(doctorRepository, times(1)).searchByName("John", pageable);
         verify(modelMapper, times(1)).toDto(any(DoctorEntity.class));
     }
@@ -72,13 +73,13 @@ class DoctorServiceTest {
         DoctorEntity doctorEntity = CreateEntityUtil.createDefaultDoctorEntity();
         DoctorDTO doctorDTO = CreateEntityUtil.createDefaultDoctorDTO();
 
-        when(doctorRepository.findByEmailCaseInsensitive(CreateEntityUtil.DOCTOR_EMAIL))
+        when(doctorRepository.findByEmailCaseInsensitive(TestConstants.DOCTOR_EMAIL))
                 .thenReturn(Optional.of(doctorEntity));
         when(modelMapper.toDto(doctorEntity)).thenReturn(doctorDTO);
 
-        DoctorDTO result = doctorService.findDoctorByEmailCaseSensitive(CreateEntityUtil.DOCTOR_EMAIL);
+        DoctorDTO result = doctorService.findDoctorByEmailCaseSensitive(TestConstants.DOCTOR_EMAIL);
 
-        assertEquals(CreateEntityUtil.DOCTOR_FIRST_NAME, result.firstName());
-        verify(doctorRepository, times(1)).findByEmailCaseInsensitive(CreateEntityUtil.DOCTOR_EMAIL);
+        assertEquals(TestConstants.DOCTOR_FIRST_NAME, result.firstName());
+        verify(doctorRepository, times(1)).findByEmailCaseInsensitive(TestConstants.DOCTOR_EMAIL);
     }
 }

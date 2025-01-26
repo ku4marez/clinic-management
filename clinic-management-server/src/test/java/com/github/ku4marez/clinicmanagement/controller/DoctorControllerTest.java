@@ -1,5 +1,6 @@
 package com.github.ku4marez.clinicmanagement.controller;
 
+import com.github.ku4marez.clinicmanagement.constant.TestConstants;
 import com.github.ku4marez.clinicmanagement.service.DoctorService;
 import com.github.ku4marez.clinicmanagement.util.CreateEntityUtil;
 import com.github.ku4marez.commonlibraries.dto.DoctorDTO;
@@ -56,24 +57,24 @@ class DoctorControllerTest {
                             }
                         """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value(CreateEntityUtil.DOCTOR_FIRST_NAME));
+                .andExpect(jsonPath("$.firstName").value(TestConstants.DOCTOR_FIRST_NAME));
     }
 
     @Test
     void testGetDoctorByEmail() throws Exception {
-        when(doctorService.findDoctorByEmailCaseSensitive(CreateEntityUtil.DOCTOR_EMAIL)).thenReturn(doctorDTO);
+        when(doctorService.findDoctorByEmailCaseSensitive(TestConstants.DOCTOR_EMAIL)).thenReturn(doctorDTO);
 
-        mockMvc.perform(get("/doctors/{email}", CreateEntityUtil.DOCTOR_EMAIL)
+        mockMvc.perform(get("/doctors/{email}", TestConstants.DOCTOR_EMAIL)
                         .with(SecurityMockMvcRequestPostProcessors.user("doctor").roles("DOCTOR")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email").value(CreateEntityUtil.DOCTOR_EMAIL));
+                .andExpect(jsonPath("$.email").value(TestConstants.DOCTOR_EMAIL));
     }
 
     @Test
     void testDeleteDoctor() throws Exception {
-        doNothing().when(doctorService).deleteDoctor(CreateEntityUtil.DOCTOR_ID);
+        doNothing().when(doctorService).deleteDoctor(TestConstants.DOCTOR_ID);
 
-        mockMvc.perform(delete("/doctors/{id}", CreateEntityUtil.DOCTOR_ID)
+        mockMvc.perform(delete("/doctors/{id}", TestConstants.DOCTOR_ID)
                         .with(SecurityMockMvcRequestPostProcessors.user("admin").roles("ADMIN")))
                 .andExpect(status().isNoContent());
     }

@@ -1,5 +1,6 @@
 package com.github.ku4marez.clinicmanagement.controller;
 
+import com.github.ku4marez.clinicmanagement.constant.TestConstants;
 import com.github.ku4marez.clinicmanagement.service.AppointmentService;
 import com.github.ku4marez.clinicmanagement.util.CreateEntityUtil;
 import com.github.ku4marez.commonlibraries.dto.AppointmentDTO;
@@ -62,17 +63,17 @@ class AppointmentControllerTest {
                                     }
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.reason").value(CreateEntityUtil.APPOINTMENT_REASON));
+                .andExpect(jsonPath("$.reason").value(TestConstants.APPOINTMENT_REASON));
     }
 
     @Test
     void testGetAppointmentById() throws Exception {
-        when(appointmentService.getAppointmentById(CreateEntityUtil.APPOINTMENT_ID)).thenReturn(appointmentDTO);
+        when(appointmentService.getAppointmentById(TestConstants.APPOINTMENT_ID)).thenReturn(appointmentDTO);
 
-        mockMvc.perform(get("/appointments/{id}", CreateEntityUtil.APPOINTMENT_ID)
+        mockMvc.perform(get("/appointments/{id}", TestConstants.APPOINTMENT_ID)
                         .with(SecurityMockMvcRequestPostProcessors.user("doctor").roles("DOCTOR")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.reason").value(CreateEntityUtil.APPOINTMENT_REASON));
+                .andExpect(jsonPath("$.reason").value(TestConstants.APPOINTMENT_REASON));
     }
 
     @Test
@@ -86,14 +87,14 @@ class AppointmentControllerTest {
                         .with(SecurityMockMvcRequestPostProcessors.user("doctor").roles("DOCTOR")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content", hasSize(1)))
-                .andExpect(jsonPath("$.content[0].reason").value(CreateEntityUtil.APPOINTMENT_REASON));
+                .andExpect(jsonPath("$.content[0].reason").value(TestConstants.APPOINTMENT_REASON));
     }
 
     @Test
     void testDeleteAppointment() throws Exception {
-        doNothing().when(appointmentService).deleteAppointment(CreateEntityUtil.APPOINTMENT_ID);
+        doNothing().when(appointmentService).deleteAppointment(TestConstants.APPOINTMENT_ID);
 
-        mockMvc.perform(delete("/appointments/{id}", CreateEntityUtil.APPOINTMENT_ID)
+        mockMvc.perform(delete("/appointments/{id}", TestConstants.APPOINTMENT_ID)
                         .with(SecurityMockMvcRequestPostProcessors.user("admin").roles("ADMIN")))
                 .andExpect(status().isNoContent());
     }

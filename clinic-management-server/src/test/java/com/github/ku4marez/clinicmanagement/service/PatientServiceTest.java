@@ -1,5 +1,6 @@
 package com.github.ku4marez.clinicmanagement.service;
 
+import com.github.ku4marez.clinicmanagement.constant.TestConstants;
 import com.github.ku4marez.clinicmanagement.entity.PatientEntity;
 import com.github.ku4marez.clinicmanagement.mapper.PatientMapper;
 import com.github.ku4marez.clinicmanagement.repository.PatientRepository;
@@ -48,7 +49,7 @@ class PatientServiceTest {
         Page<PatientDTO> result = patientService.searchPatient("Jane", pageable);
 
         assertEquals(1, result.getTotalElements());
-        assertEquals(CreateEntityUtil.PATIENT_FIRST_NAME, result.getContent().get(0).firstName());
+        assertEquals(TestConstants.PATIENT_FIRST_NAME, result.getContent().get(0).firstName());
         verify(patientRepository, times(1)).searchByName("Jane", pageable);
         verify(modelMapper, times(1)).toDto(any(PatientEntity.class));
     }
@@ -64,7 +65,7 @@ class PatientServiceTest {
 
         PatientDTO result = patientService.createPatient(patientDTO);
 
-        assertEquals(CreateEntityUtil.PATIENT_FIRST_NAME, result.firstName());
+        assertEquals(TestConstants.PATIENT_FIRST_NAME, result.firstName());
         verify(patientRepository, times(1)).save(patientEntity);
     }
 
@@ -73,22 +74,22 @@ class PatientServiceTest {
         PatientEntity patientEntity = CreateEntityUtil.createDefaultPatientEntity();
         PatientDTO patientDTO = CreateEntityUtil.createDefaultPatientDTO();
 
-        when(patientRepository.findByMedicalRecordNumber(CreateEntityUtil.PATIENT_RECORD_NUMBER))
+        when(patientRepository.findByMedicalRecordNumber(TestConstants.PATIENT_RECORD_NUMBER))
                 .thenReturn(Optional.of(patientEntity));
         when(modelMapper.toDto(patientEntity)).thenReturn(patientDTO);
 
-        Optional<PatientDTO> result = patientService.getPatientByRecordNumber(CreateEntityUtil.PATIENT_RECORD_NUMBER);
+        Optional<PatientDTO> result = patientService.getPatientByRecordNumber(TestConstants.PATIENT_RECORD_NUMBER);
 
         assertTrue(result.isPresent());
-        assertEquals(CreateEntityUtil.PATIENT_FIRST_NAME, result.get().firstName());
-        verify(patientRepository, times(1)).findByMedicalRecordNumber(CreateEntityUtil.PATIENT_RECORD_NUMBER);
+        assertEquals(TestConstants.PATIENT_FIRST_NAME, result.get().firstName());
+        verify(patientRepository, times(1)).findByMedicalRecordNumber(TestConstants.PATIENT_RECORD_NUMBER);
     }
 
     @Test
     void testDeletePatient() {
-        patientService.deletePatient(CreateEntityUtil.PATIENT_ID);
+        patientService.deletePatient(TestConstants.PATIENT_ID);
 
-        verify(patientRepository, times(1)).deleteById(CreateEntityUtil.PATIENT_ID);
+        verify(patientRepository, times(1)).deleteById(TestConstants.PATIENT_ID);
     }
 }
 
