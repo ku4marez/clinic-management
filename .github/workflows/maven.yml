@@ -54,16 +54,16 @@ jobs:
         working-directory: clinic-management-server
         run: mvn -s $GITHUB_WORKSPACE/.github/workflows/settings.xml clean package -DskipTests
         env:
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
       # Run Tests
       - name: Run Tests
         working-directory: clinic-management-server
         run: mvn -s $GITHUB_WORKSPACE/.github/workflows/settings.xml test
         env:
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          USER_NAME: ${{ secrets.USER_NAME }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
       # Tear down Docker Compose
       - name: Tear Down MongoDB
