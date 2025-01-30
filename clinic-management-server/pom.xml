@@ -25,7 +25,7 @@
 		<hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<springdoc.version>2.2.0</springdoc.version>
-		<commonlibraries.version>1.2.3</commonlibraries.version>
+		<commonlibraries.version>1.2.5</commonlibraries.version>
 	</properties>
 
 	<dependencies>
@@ -161,8 +161,8 @@
 
 	<repositories>
 		<repository>
-			<id>github</id>
-			<url>https://maven.pkg.github.com/ku4marez/common-libraries</url>
+			<id>nexus</id>
+			<url>http://localhost:8081/repository/common-libraries/</url>
 		</repository>
 	</repositories>
 
