@@ -52,7 +52,7 @@ jobs:
       # Build and Package Application
       - name: Build and Package Server
         working-directory: clinic-management-server
-        run: mvn -s $GITHUB_WORKSPACE/clinic-management-server/settings.xml clean package -DskipTests
+        run: mvn -s $GITHUB_WORKSPACE/.github/workflows/settings.xml clean package -DskipTests
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
@@ -60,7 +60,7 @@ jobs:
       # Run Tests
       - name: Run Tests
         working-directory: clinic-management-server
-        run: mvn -s $GITHUB_WORKSPACE/clinic-management-server/settings.xml test
+        run: mvn -s $GITHUB_WORKSPACE/.github/workflows/settings.xml test
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
