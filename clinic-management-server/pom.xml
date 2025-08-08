@@ -8,7 +8,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.github.ku4marez</groupId>
-	<artifactId>clinic-management</artifactId>
+	<artifactId>clinic-management-server</artifactId>
 	<version>1.0.0</version>
 	<name>Clinic Management Server</name>
 	<description>CRUD application for managing patients, appointments, and doctors.</description>
